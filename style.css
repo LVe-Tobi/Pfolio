@@ -1,0 +1,89 @@
+/* Fond dégradé psychédélique */
+body {
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    color: #e6e6e6;
+    font-family: 'Ubuntu Mono', monospace;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.terminal-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    height: 90vh;
+}
+
+/* Terminal principal */
+.terminal {
+    background: rgba(15, 15, 35, 0.8);
+    border: 3px solid #ff2e63;
+    border-radius: 5px;
+    padding: 20px;
+    height: 70vh;
+    box-shadow: 0 0 30px rgba(255, 46, 99, 0.4);
+}
+
+.terminal-output {
+    height: 90%;
+    overflow-y: auto;
+    font-size: 1.1rem;
+}
+
+.terminal-input {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.prompt {
+    color: #00f5ff;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+#command-input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: 1rem;
+    width: 80%;
+    outline: none;
+    caret-color: #ff2e63;
+}
+
+/* Panneau latéral */
+.side-panel {
+    background: rgba(10, 36, 99, 0.6);
+    border: 2px dashed #00f5ff;
+    padding: 15px;
+    height: 70vh;
+    overflow-y: auto;
+}
+
+.ascii-art {
+    color: #ff2e63;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Couleurs néon */
+.neon-pink { color: #ff2e63; text-shadow: 0 0 5px #ff2e63; }
+.neon-cyan { color: #00f5ff; text-shadow: 0 0 5px #00f5ff; }
+.neon-yellow { color: #fff700; text-shadow: 0 0 5px #fff700; }
+.neon-blue-bg { box-shadow: 0 0 20px rgba(0, 245, 255, 0.3); }
+
+/* Effets de terminal */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.blink {
+    animation: blink 1s infinite;
+}
