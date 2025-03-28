@@ -403,10 +403,18 @@
                     <p>> Initialisation du système neural <span class="blink">...</span></p>
                     <p>> Adaptation à l'écran <span id="screen-size"></span></p>
                     <p>> Chargement de l'interface optimisée <span class="blink">...</span></p>
+                    <p>> Tapez un numéro ou 'help' :</p>
+                    <p>> 1. À propos</p>
+                    <p>> 2. Compétences</p>
+                    <p>> 3. Projets</p>
+                    <p>> 4. Contact</p>
+                    <p>> 5. Télécharger CV</p>
+                    <p>> 9. Mode Admin</p>
+                    <p>> 0. Effacer</p>
                 </div>
                 <div class="terminal-input">
-                    <span class="prompt">root@tella:~#</span>
-                    <input type="text" id="command-input" autofocus placeholder="Tapez 'help' pour commencer">
+                    <span class="prompt" id="terminal-prompt">[CHOIX]></span>
+                    <input type="text" id="command-input" autofocus placeholder="Entrez 1-5,9,0 ou help">
                 </div>
             </div>
         </div>
@@ -428,7 +436,7 @@
                 <li>Bac F2 Electronique</li>
             </ul>
             
-            <h3>RÉSEAUX</h3>
+            <h3>CONTACTS</h3>
             <ul>
                 <li>📧 <a href="mailto:Ivetobitella@gmail.com" class="neon-cyan">Ivetobitella@gmail.com</a></li>
                 <li>📞 +229 95 62 87 81</li>
@@ -437,12 +445,7 @@
                 <li>🐙 <a href="https://github.com/LVe-Tobi" class="neon-yellow">GitHub</a></li>
             </ul>
             
-            <h3>TÉLÉCHARGEMENT</h3>
-            <ul>
-                <li>
-                    <a href="cv.pdf" download="CV_TELLA_Love.pdf" class="neon-pink">📄 Télécharger mon CV</a>
-                </li>
-            </ul>
+           
         </div>
     </div>
 
@@ -474,116 +477,151 @@
                 container.appendChild(particle);
             }
         }
-        
-        // Système de commandes amélioré
-        const commands = {
-            help: () => `<p>> <span class="neon-pink">SYSTÈME D'AIDE</span><br>
-                <span class="neon-cyan">about</span> ......... Affiche le profil complet<br>
-                <span class="neon-cyan">skills</span> ........ Liste des compétences détaillées<br>
-                <span class="neon-cyan">projects</span> ...... Voir les projets récents<br>
-                <span class="neon-cyan">contact</span> ...... Coordonnées directes<br>
-                <span class="neon-cyan">secret</span> ....... Mode administrateur<br>
-                <span class="neon-cyan">clear</span> ........ Nettoyer le terminal</p>`,
+
+        // État du système
+        let isAdminMode = false;
+
+        // Commandes en mode normal (numériques)
+        const normalCommands = {
+            help: () => `<p>> <span class="neon-pink">MENU PRINCIPAL</span><br>
+                <span class="neon-cyan">1</span> ......... À propos<br>
+                <span class="neon-cyan">2</span> ........ Compétences<br>
+                <span class="neon-cyan">3</span> ........ Projets<br>
+                <span class="neon-cyan">4</span> ........ Contact<br>
+                <span class="neon-cyan">5</span> ........ Télécharger CV<br>
+                <span class="neon-cyan">9</span> ........ Mode Admin<br>
+                <span class="neon-cyan">0</span> ........ Effacer</p>`,
             
-            about: () => `<p>> <span class="neon-pink">[PROFIL CYBERNÉTIQUE]</span><br>
+            "1": () => `<p>> <span class="neon-pink">[PROFIL CYBERNÉTIQUE]</span><br>
                 <span class="neon-yellow">Identité:</span> TELLA Love Tobiloba<br>
                 <span class="neon-yellow">Spécialité:</span> Sécurité Offensive/Défensive<br>
                 <span class="neon-yellow">Niveau:</span> Expert (Licence + Certifications)<br>
                 <span class="neon-yellow">Localisation:</span> Bénin<br><br>
                 > <span class="neon-green">Description:</span><br>
                 Professionnel de la cybersécurité avec 2 ans d'expérience<br>
-                dans le pentesting, l'analyse forensique, la cryptographie et la réparation des ordinateurs.<br>
-                Passionné par la résolution de problèmes complexes et la<br>
-                protection des infrastructures critiques.</p>`,
+                dans le pentesting, l'analyse forensique, la cryptographie.</p>`,
             
-            skills: () => `<p>> <span class="neon-pink">[COMPÉTENCES TECHNIQUES]</span><br>
+            "2": () => `<p>> <span class="neon-pink">[COMPÉTENCES TECHNIQUES]</span><br>
                 <span class="neon-cyan">• Pentest:</span> 85% (HTB, TryHackMe, Vulnhub)<br>
                 <span class="neon-cyan">• Réseaux:</span> 92% (Cisco, VLAN, Pare-feu)<br>
-                <span class="neon-cyan">• Cryptographie:</span> 78% (SSL/TLS, OpenSSL, OpenSSH)<br>
+                <span class="neon-cyan">• Cryptographie:</span> 78% (SSL/TLS, OpenSSL)<br>
                 <span class="neon-cyan">• Forensique:</span> 70% (Autopsie, Wireshark)<br>
-                <span class="neon-cyan">• Développement:</span> Python, PHP, JavaScript, HTML, CSS</p>`,
+                <span class="neon-cyan">• Développement:</span> Python, PHP, JavaScript</p>`,
             
-            projects: () => `<p>> <span class="neon-pink">[PROJETS RÉCENTS]</span><br>
+            "3": () => `<p>> <span class="neon-pink">[PROJETS RÉCENTS]</span><br>
                 <span class="neon-yellow">• Portail Captif LDAP:</span> PHP/Python/AD<br>
                 <span class="neon-yellow">• CTF Write-ups:</span> 15+ machines résolues<br>
                 <span class="neon-yellow">• Outil d'automatisation:</span> Scripts Python<br>
-                <span class="neon-yellow">• Lab de sécurité:</span> Environnement Kali<br>
-                <span class="neon-yellow">• Analyse de malware:</span> Reverse Engineering</p>`,
+                <span class="neon-yellow">• Lab de sécurité:</span> Environnement Kali</p>`,
             
-            contact: () => `<p>> <span class="neon-pink">[CANAUX DE CONTACT]</span><br>
+            "4": () => `<p>> <span class="neon-pink">[CONTACT]</span><br>
                 <span class="neon-cyan">Email:</span> Ivetobitella@gmail.com<br>
-                <span class="neon-cyan">Téléphone:</span> +229 95 62 87 81<br>
-                <span class="neon-cyan">Téléphone:</span> +229 67 28 99 17<br>
-                <span class="neon-cyan">LinkedIn:</span> <a href="https://www.linkedin.com/in/love-tobiloba-tella-8b3165262?utm_source=share&utm_campaign=share_via&utm_content=profile&utm" class="neon-green">lien_profil</a><br>
+                <span class="neon-cyan">Téléphone:</span> +229 95 62 87 81 / +229 67 28 99 17<br>
+                <span class="neon-cyan">LinkedIn:</span> <a href="https://www.linkedin.com/in/love-tobiloba-tella-8b3165262" class="neon-green">lien_profil</a><br>
                 <span class="neon-cyan">GitHub:</span> <a href="https://github.com/LVe-Tobi" class="neon-yellow">lien_github</a></p>`,
             
-            secret: () => {
-                document.body.style.background = "var(--dark-bg)";
-                const secretOutput = document.getElementById('terminal-output');
-                secretOutput.innerHTML = '';
-                
-                const matrixChars = "010101010011ララブトビロバ";
-                const lines = [];
-                
-                for (let i = 0; i < 50; i++) {
-                    let line = '';
-                    for (let j = 0; j < 80; j++) {
-                        line += matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
-                    }
-                    lines.push(`<p style="color: var(--matrix-green)">${line}</p>`);
-                }
-                
-                lines.push('<p style="color: var(--neon-pink)">> ACCÈS ADMINISTRATEUR AUTORISÉ</p>');
-                lines.push('<p style="color: var(--neon-cyan)">> Bienvenue dans le système central, TELLA</p>');
-                
-                secretOutput.innerHTML = lines.join('');
-                secretOutput.scrollTop = secretOutput.scrollHeight;
-                
-                return '';
+            "5": () => {
+                window.open('cv.pdf', '_blank');
+                return `<p>> <span class="neon-green">Téléchargement du CV initié</span></p>`;
             },
             
-            clear: () => {
-                document.getElementById('terminal-output').innerHTML = '';
-                return '';
+            "9": () => {
+                isAdminMode = true;
+                document.getElementById('terminal-prompt').textContent = "root@tella:~#";
+                document.getElementById('command-input').placeholder = "Tapez une commande admin";
+                return `<p>> <span class="neon-pink">MODE ADMIN ACTIVÉ</span><br>
+                    > Commandes disponibles:<br>
+                    > <span class="neon-cyan">about</span> - Affiche le profil complet<br>
+                    > <span class="neon-cyan">skills</span> - Liste des compétences<br>
+                    > <span class="neon-cyan">projects</span> - Voir les projets<br>
+                    > <span class="neon-cyan">contact</span> - Coordonnées<br>
+                    > <span class="neon-cyan">exit</span> - Quitter le mode admin</p>`;
+            },
+            
+            "0": () => {
+                return `
+                    <p>> Terminal réinitialisé</p>
+                    <p>> Tapez un numéro ou 'help' :</p>
+                    <p>> 1. À propos</p>
+                    <p>> 2. Compétences</p>
+                    <p>> 3. Projets</p>
+                    <p>> 4. Contact</p>
+                    <p>> 5. Télécharger CV</p>
+                    <p>> 9. Mode Admin</p>
+                    <p>> 0. Effacer</p>
+                `;
             }
         };
 
-        // Gestion des commandes avec effets
+        // Commandes en mode admin (textuelles)
+        const adminCommands = {
+            about: () => `<p>> <span class="neon-pink">[PROFIL ADMIN]</span><br>
+                <span class="neon-yellow">Identité complète:</span> TELLA Love Tobiloba<br>
+                <span class="neon-yellow">Spécialités avancées:</span><br>
+                - Pentesting avancé (OWASP Top 10)<br>
+                - Analyse forensic approfondie<br>
+                - Cryptographie asymétrique<br>
+                <span class="neon-yellow">Certifications:</span> En cours d'obtention</p>`,
+            
+            skills: () => `<p>> <span class="neon-pink">[COMPÉTENCES AVANCÉES]</span><br>
+                <span class="neon-cyan">• Pentest:</span> Techniques avancées (85%)<br>
+                <span class="neon-cyan">• Réseaux:</span> Architectures complexes (92%)<br>
+                <span class="neon-cyan">• Cryptographie:</span> Algorithmes avancés (78%)<br>
+                <span class="neon-cyan">• Forensique:</span> Analyse mémoire (70%)<br>
+                <span class="neon-cyan">• Développement:</span> Python avancé, Sécurité web</p>`,
+            
+            projects: () => `<p>> <span class="neon-pink">[PROJETS CONFIDENTIELS]</span><br>
+                <span class="neon-yellow">• Système de détection d'intrusion</span><br>
+                <span class="neon-yellow">• Analyse de malware avancée</span><br>
+                <span class="neon-yellow">• Outils de pentest maison</span><br>
+                <span class="neon-yellow">• Recherche en cryptographie</span></p>`,
+            
+            contact: () => `<p>> <span class="neon-pink">[CONTACTS PRIVÉS]</span><br>
+                <span class="neon-cyan">Email pro:</span> tella.security@protonmail.com<br>
+                <span class="neon-cyan">PGP Key:</span> disponible sur demande<br>
+                <span class="neon-cyan">Signal:</span> +229 95 62 87 81</p>`,
+            
+            exit: () => {
+                isAdminMode = false;
+                document.getElementById('terminal-prompt').textContent = "[CHOIX]>";
+                document.getElementById('command-input').placeholder = "Entrez 1-5,9,0 ou help";
+                return `<p>> <span class="neon-green">Mode admin désactivé</span><br>
+                    > Retour au mode normal</p>`;
+            }
+        };
+
+        // Gestion des commandes
         document.getElementById('command-input').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                const input = e.target.value.trim().toLowerCase();
+                const input = e.target.value.trim();
                 const output = document.getElementById('terminal-output');
                 
                 // Affiche la commande
-                output.innerHTML += `<p><span class="prompt">root@tella:~#</span> ${input}</p>`;
-                
-                // Effet sonore (simulé)
-                if (input) {
-                    const audio = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU...');
-                    audio.volume = 0.2;
-                    audio.play().catch(e => console.log("Audio error:", e));
-                }
+                output.innerHTML += `<p><span id="current-prompt">${isAdminMode ? "root@tella:~#" : "[CHOIX]>"}</span> ${input}</p>`;
                 
                 // Exécute la commande
-                if (commands[input]) {
-                    if (input === 'secret') {
-                        document.body.style.background = "#000";
-                        document.querySelector('.terminal').style.boxShadow = "0 0 50px var(--neon-pink)";
-                        setTimeout(() => commands[input](), 500);
+                let response;
+                if (isAdminMode) {
+                    if (adminCommands[input]) {
+                        response = adminCommands[input]();
                     } else {
-                        const response = commands[input]();
-                        output.innerHTML += response;
+                        response = `<p>> <span class="neon-pink">ERREUR:</span> Commande admin inconnue</p>`;
                     }
-                } else if (input) {
-                    output.innerHTML += `<p>> <span class="neon-pink">ERREUR:</span> Commande inconnue. Tapez <span class="neon-cyan">'help'</span></p>`;
+                } else {
+                    if (normalCommands[input]) {
+                        response = normalCommands[input]();
+                    } else {
+                        response = `<p>> <span class="neon-pink">ERREUR:</span> Commande inconnue. Tapez <span class="neon-cyan">'help'</span></p>`;
+                    }
                 }
                 
+                output.innerHTML += response;
                 e.target.value = '';
                 output.scrollTop = output.scrollHeight;
             }
         });
 
-        // Initialisation garantie
+        // Initialisation
         function initializeTerminal() {
             const output = document.getElementById('terminal-output');
             if (!output) {
@@ -596,13 +634,6 @@
             if (screenSize) {
                 screenSize.textContent = `${window.innerWidth}px × ${window.innerHeight}px`;
             }
-            
-            // Contenu initial minimal
-            output.innerHTML = `
-                <p>> Système CyberNexus v2.0</p>
-                <p>> Interface terminal initialisée</p>
-                <p>> Tapez 'help' pour commencer <span class="blink">_</span></p>
-            `;
             
             // Init particules
             initParticles();
